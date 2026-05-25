@@ -60,7 +60,7 @@ Pendekatan: **bottom-up incremental**. Layer paling stabil (types, schema valida
   - Saat app launch dan `hasApiKey === false`, tampilkan banner di Editor dengan link ke Settings.
   - _Requirements: 2.5, 5.7_
 
-- [ ] 8. Gemini integration (`lib/gemini.ts`)
+- [x] 8. Gemini integration (`lib/gemini.ts`)
   - Buat `src/constants/geminiPrompt.ts` berisi system instruction yang menginstruksikan Gemini menghasilkan JSON SceneSpec dengan schema yang ketat.
   - Implementasi `src/lib/gemini.ts` dengan fungsi `generateSceneSpec(prompt, apiKey)` memakai SDK `@google/genai`.
   - Pakai `responseSchema` dengan tipe yang merefleksikan SceneSpec.
@@ -69,7 +69,7 @@ Pendekatan: **bottom-up incremental**. Layer paling stabil (types, schema valida
   - JSDoc lengkap sesuai coding-rules Section 10.2.
   - _Requirements: 2.1, 2.3, 2.4, 2.7, 2.8_
 
-- [ ] 9. Hook `useGemini` + komponen `PromptInput`
+- [x] 9. Hook `useGemini` + komponen `PromptInput`
   - Implementasi `src/hooks/useGemini.ts` yang membaca `hasApiKey` dari settingsStore, ambil API key via IPC, panggil `generateSceneSpec`, dan update `sceneStore` (loading, error, sceneSpec, promptHistory).
   - Implementasi `src/components/features/PromptInput.tsx` dengan textarea (max 500 char), tombol Generate, shortcut Ctrl+Enter, indikator loading, dropdown riwayat 5 prompt terakhir.
   - Tombol disabled saat `isGenerating` atau prompt kosong/whitespace atau panjang melebihi limit.
