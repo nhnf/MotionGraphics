@@ -1,12 +1,8 @@
 // Tipe global untuk API yang di-expose via electron/preload.ts contextBridge.
-// Akan diperluas saat IPC bridge ditambahkan (render, settings, file).
+// Shape detail didefinisikan di `src/types/ipc.ts` agar bisa dipakai juga di
+// main process dan typed wrapper.
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-interface ElectronAPI {
-  // render?: { start: (...) => Promise<...>; cancel: () => Promise<...> };
-  // settings?: { getApiKey: () => Promise<...>; setApiKey: (key: string) => Promise<...> };
-  // file?: { saveVideo: (...) => Promise<...>; openFolder: (path: string) => Promise<...> };
-}
+import type { ElectronAPI } from '@/types/ipc';
 
 declare global {
   interface Window {
