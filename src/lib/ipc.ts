@@ -1,8 +1,7 @@
 // Typed wrapper di atas `window.electronAPI` yang melempar `Error` jika IPC
 // response `success: false`. Komponen dan hooks memanggil fungsi di sini
 // (bukan langsung ke `window.electronAPI`) agar bisa pakai `try-catch` tanpa
-// perlu cek `success` manual. Lihat coding-rules Section 7.2 dan design.md
-// \"Error mapping\".
+// perlu cek `success` manual.
 
 import type {
   SetApiKeyPayload,
@@ -11,60 +10,50 @@ import type {
 } from '@/types/ipc';
 
 /**
- * Wrapper untuk `window.electronAPI.settings.getStatus()`. Melempar `Error`
- * jika IPC gagal.
- *
- * @returns Object `{ hasKey: boolean }` jika sukses.
- * @throws {Error} Jika IPC response `success: false`.
+ * Guard: pastikan window.electronAPI tersedia sebelum memanggil IPC.
+ * Memberikan error yang jelas jika preload script tidak jalan.
  */
+function requireElectronAPI() {
+  if (typeof window === 'undefined' || !window.electronAPI) {
+    throw new Error(
+      'window.electronAPI tidak tersedia. ' +
+        'Pastikan aplikasi berjalan di dalam Electron (bukan browser biasa) ' +
+        'dan preload script sudah ter-load dengan benar.',
+    );
+  }
+  return window.electronAPI;
+}
+
 export async function getApiKeyStatus(): Promise<ApiKeyStatusResult> {
-  const response = await window.electronAPI.settings.getStatus();
+  const api = requireElectronAPI();
+  const response = await api.settings.getStatus();
   if (!response.success) {
     throw new Error(response.error);
   }
   return response.data;
 }
 
-/**
- * Wrapper untuk `window.electronAPI.settings.setKey()`. Melempar `Error`
- * jika IPC gagal (mis: API key kosong/whitespace).
- *
- * @param apiKey - Gemini API key dari Google AI Studio.
- * @throws {Error} Jika IPC response `success: false` (validasi gagal atau
- *   error saat menulis ke disk).
- */
 export async function setApiKey(apiKey: string): Promise<void> {
+  const api = requireElectronAPI();
   const payload: SetApiKeyPayload = { apiKey };
-  const response = await window.electronAPI.settings.setKey(payload);
+  const response = await api.settings.setKey(payload);
   if (!response.success) {
     throw new Error(response.error);
   }
 }
 
-/**
- * Wrapper untuk `window.electronAPI.settings.getKey()`. Melempar `Error`
- * jika IPC gagal (mis: API key belum pernah di-set).
- *
- * @returns Object `{ apiKey: string }` jika sukses.
- * @throws {Error} Jika IPC response `success: false` (key belum diset atau
- *   error saat membaca dari disk).
- */
 export async function getApiKey(): Promise<GetApiKeyResult> {
-  const response = await window.electronAPI.settings.getKey();
+  const api = requireElectronAPI();
+  const response = await api.settings.getKey();
   if (!response.success) {
     throw new Error(response.error);
   }
   return response.data;
 }
 
-/**
- * Wrapper untuk `window.electronAPI.settings.deleteKey()`. Melempar `Error`
- * jika IPC gagal (jarang terjadi — delete biasanya idempotent).
- *
- * @throws {Error} Jika IPC response `success: false`.
- */
 export async function deleteApiKey(): Promise<void> {
-  const response = await window.electronAPI.settings.deleteKey();
+  const api = requireElectronAPI();
+  const response = await api.settings.deleteKey();
   if (!response.success) {
     throw new Error(response.error);
   }

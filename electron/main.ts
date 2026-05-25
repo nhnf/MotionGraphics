@@ -2,8 +2,8 @@ import { app, BrowserWindow, shell } from 'electron';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { registerSettingsHandlers } from './ipc/settings';
-import { registerRenderHandlers } from './ipc/render';
 import { registerFileHandlers } from './ipc/file';
+import { registerRenderHandlers } from './ipc/render';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -30,7 +30,7 @@ function createMainWindow(): BrowserWindow {
     window.show();
   });
 
-  // Open external links in default browser, not inside Electron
+  // Buka link eksternal di browser default, bukan di dalam Electron
   window.webContents.setWindowOpenHandler(({ url }) => {
     shell.openExternal(url);
     return { action: 'deny' };
@@ -46,12 +46,14 @@ function createMainWindow(): BrowserWindow {
 }
 
 app.whenReady().then(() => {
+  // Daftarkan IPC handlers SEBELUM window dibuat agar siap saat renderer load
+  registerSettingsHandlers();
+  registerFileHandlers();
+
   const mainWindow = createMainWindow();
 
-  // Register IPC handlers sebelum window load agar siap saat renderer load
-  registerSettingsHandlers();
+  // render handlers butuh mainWindow reference untuk kirim progress events
   registerRenderHandlers(mainWindow);
-  registerFileHandlers();
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
