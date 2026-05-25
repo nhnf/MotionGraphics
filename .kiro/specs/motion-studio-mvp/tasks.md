@@ -36,7 +36,7 @@ Pendekatan: **bottom-up incremental**. Layer paling stabil (types, schema valida
   - Schema validation: hanya satu key `apiKey` (string).
   - _Requirements: 5.2, 5.6, 8.2_
 
-- [~] 5. IPC handlers settings + bridge di preload
+- [ ] 5. IPC handlers settings + bridge di preload
   - Buat `electron/ipc/settings.ts` dengan handler `settings:get-api-key-status`, `settings:set-api-key`, `settings:get-api-key`, `settings:delete-api-key`. Semua mengembalikan `{ success, ... }`.
   - Update `electron/preload.ts` untuk expose `electronAPI.settings.{getStatus, setKey, getKey, deleteKey}`.
   - Update `src/global.d.ts` dengan interface ElectronAPI yang sesuai.
@@ -44,7 +44,7 @@ Pendekatan: **bottom-up incremental**. Layer paling stabil (types, schema valida
   - Daftarkan handler di `electron/main.ts` saat app ready.
   - _Requirements: 5.2, 5.5, 8.1_
 
-- [~] 6. Halaman Settings (UI API key)
+- [ ] 6. Halaman Settings (UI API key)
   - Buat `src/components/ui/Button.tsx`, `Input.tsx`, dan komponen atom lain yang dibutuhkan.
   - Implementasi `src/pages/Settings.tsx` dengan form input API key (type=password), tombol Save, tombol Test Connection, tombol Hapus.
   - Save → panggil `electronAPI.settings.setKey()`.
@@ -53,14 +53,14 @@ Pendekatan: **bottom-up incremental**. Layer paling stabil (types, schema valida
   - Link ke Google AI Studio (`https://aistudio.google.com/apikey`) yang membuka external browser.
   - _Requirements: 5.1, 5.3, 5.4, 5.5_
 
-- [~] 7. Routing minimal Editor ↔ Settings
+- [ ] 7. Routing minimal Editor ↔ Settings
   - Update `src/App.tsx` dengan state route sederhana (`'editor' | 'settings'`) tanpa router library.
   - Header punya tombol "Settings" yang switch route.
   - Halaman Settings punya tombol "Kembali ke Editor".
   - Saat app launch dan `hasApiKey === false`, tampilkan banner di Editor dengan link ke Settings.
   - _Requirements: 2.5, 5.7_
 
-- [~] 8. Gemini integration (`lib/gemini.ts`)
+- [ ] 8. Gemini integration (`lib/gemini.ts`)
   - Buat `src/constants/geminiPrompt.ts` berisi system instruction yang menginstruksikan Gemini menghasilkan JSON SceneSpec dengan schema yang ketat.
   - Implementasi `src/lib/gemini.ts` dengan fungsi `generateSceneSpec(prompt, apiKey)` memakai SDK `@google/genai`.
   - Pakai `responseSchema` dengan tipe yang merefleksikan SceneSpec.
@@ -69,45 +69,45 @@ Pendekatan: **bottom-up incremental**. Layer paling stabil (types, schema valida
   - JSDoc lengkap sesuai coding-rules Section 10.2.
   - _Requirements: 2.1, 2.3, 2.4, 2.7, 2.8_
 
-- [~] 9. Hook `useGemini` + komponen `PromptInput`
+- [ ] 9. Hook `useGemini` + komponen `PromptInput`
   - Implementasi `src/hooks/useGemini.ts` yang membaca `hasApiKey` dari settingsStore, ambil API key via IPC, panggil `generateSceneSpec`, dan update `sceneStore` (loading, error, sceneSpec, promptHistory).
   - Implementasi `src/components/features/PromptInput.tsx` dengan textarea (max 500 char), tombol Generate, shortcut Ctrl+Enter, indikator loading, dropdown riwayat 5 prompt terakhir.
   - Tombol disabled saat `isGenerating` atau prompt kosong/whitespace atau panjang melebihi limit.
   - Saat `hasApiKey === false`, klik Generate menampilkan banner peringatan dengan link ke Settings (tidak memanggil API).
   - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 2.5, 2.9_
 
-- [~] 10. Remotion: scene templates dasar (`BlankScene`, `TitleCard`)
+- [ ] 10. Remotion: scene templates dasar (`BlankScene`, `TitleCard`)
   - Buat `remotion/scenes/BlankScene.tsx` — fallback yang hanya menampilkan bgColor.
   - Buat `remotion/scenes/TitleCard.tsx` dengan animasi masuk (fadeIn default) memakai `useCurrentFrame` + `interpolate` sesuai coding-rules Section 8.1.
   - Implementasi helper `applyEntryAnimation(frame, scene)` dan `applyExitAnimation(frame, scene)` untuk reuse di template lain.
   - _Requirements: 6.1, 6.2, 6.3, 6.8, 6.9, 6.10_
 
-- [~] 11. Remotion: scene templates sisanya (`QuoteCard`, `LowerThird`, `PromoCard`)
+- [ ] 11. Remotion: scene templates sisanya (`QuoteCard`, `LowerThird`, `PromoCard`)
   - Implementasi tiga komponen sesuai design dengan layout yang berbeda (kutipan dengan separator, lower third di sepertiga bawah, promo card dengan highlight CTA).
   - Semua memakai helper animation dari task 10.
   - Pastikan props serializable (JSON-safe) sesuai coding-rules Section 8.2.
   - _Requirements: 6.4, 6.5, 6.6_
 
-- [~] 12. Remotion: RootComposition + SceneRenderer mapping
+- [ ] 12. Remotion: RootComposition + SceneRenderer mapping
   - Buat `remotion/SceneRenderer.tsx` dengan switch berdasarkan `scene.type` ke komponen yang sesuai (default fallback ke BlankScene + log warning).
   - Buat `remotion/RootComposition.tsx` yang menerima `sceneSpec` prop, render `<Series>` dengan setiap scene di-wrap `<Series.Sequence durationInFrames={endFrame - startFrame}>`.
   - Update `remotion/index.ts` dengan `registerRoot` yang mendaftarkan satu Composition `id="motion-studio"` dengan dimensi/fps/duration dihitung dari sceneSpec.
   - _Requirements: 6.1, 6.2, 6.7, 6.10_
 
-- [~] 13. Komponen `PreviewPanel` dengan `@remotion/player`
+- [ ] 13. Komponen `PreviewPanel` dengan `@remotion/player`
   - Implementasi `src/components/features/PreviewPanel.tsx` membaca `sceneSpec` dari store.
   - Embed `<Player>` dengan `inputProps={{ sceneSpec }}`, `compositionWidth/Height` dari sceneSpec, `durationInFrames`, `fps`, dan controls bawaan.
   - Saat `sceneSpec === null`, tampilkan placeholder "Tulis prompt dan klik Generate".
   - Expose ref player agar bisa seek dari SceneList (task 14).
   - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7_
 
-- [~] 14. Komponen `SceneList`
+- [ ] 14. Komponen `SceneList`
   - Implementasi `src/components/features/SceneList.tsx` yang me-render daftar scene horizontal dengan badge `type`.
   - Klik scene → seek player ke `startFrame` (lewat callback ke parent atau context).
   - Tampilkan placeholder "Belum ada scene" saat `sceneSpec === null`.
   - _Requirements: 3.8_
 
-- [~] 15. Video renderer service di main process
+- [ ] 15. Video renderer service di main process
   - Install `@remotion/bundler` jika belum.
   - Implementasi `electron/services/videoRenderer.ts` dengan fungsi `renderVideo({ sceneSpec, outputPath, resolution, fps, onProgress }): Promise<string>`.
   - Bundle Remotion sekali di build time atau lazy on first render. Cache bundle path.
@@ -116,7 +116,7 @@ Pendekatan: **bottom-up incremental**. Layer paling stabil (types, schema valida
   - Pastikan file partial dihapus saat error/cancel (Property 4).
   - _Requirements: 4.4, 4.6, 4.8, 4.12, 7.4_
 
-- [~] 16. IPC handlers render + file dialog
+- [ ] 16. IPC handlers render + file dialog
   - Buat `electron/ipc/render.ts` dengan handler `render:start`, `render:cancel`. Tolak start jika sudah ada render aktif (Property 3).
   - Emit event `render:progress` ke renderer via `webContents.send`.
   - Buat `electron/ipc/file.ts` dengan handler `file:save-dialog` (memakai `dialog.showSaveDialog`) dan `file:reveal` (memakai `shell.showItemInFolder`).
@@ -124,19 +124,19 @@ Pendekatan: **bottom-up incremental**. Layer paling stabil (types, schema valida
   - Update `preload.ts` dan `global.d.ts` dengan API baru.
   - _Requirements: 4.3, 4.4, 4.5, 4.7, 4.9, 8.3_
 
-- [~] 17. Hook `useRender` + komponen `ExportBar`
+- [ ] 17. Hook `useRender` + komponen `ExportBar`
   - Implementasi `src/hooks/useRender.ts` yang trigger `file:save-dialog` lalu `render:start`, listen event `render:progress`, dan update `renderStore`.
   - Implementasi `src/components/features/ExportBar.tsx` dengan dropdown resolusi (HD, Full HD), dropdown fps (24, 30), tombol Export, progress bar, tombol Cancel saat render aktif.
   - Saat render selesai → tampilkan toast/banner sukses dengan tombol "Buka Folder" (panggil `file:reveal`).
   - _Requirements: 4.1, 4.2, 4.6, 4.7, 4.9, 4.10, 4.11_
 
-- [~] 18. Halaman Editor: layout final
+- [ ] 18. Halaman Editor: layout final
   - Update `src/pages/Editor.tsx` dengan layout grid sesuai PRD Section 5.1: header (logo + Settings button), left panel (PromptInput + SceneList), center (PreviewPanel), bottom (ExportBar).
   - Banner peringatan "API key belum diset" muncul saat `hasApiKey === false`.
   - Apply Tailwind dark theme dengan accent teal sesuai design tokens.
   - _Requirements: 5.7_
 
-- [~] 19. CSP, security hardening, dan smoke test manual
+- [ ] 19. CSP, security hardening, dan smoke test manual
   - Verifikasi CSP di `index.html` membatasi `connect-src` ke domain yang benar (Property 5).
   - Verifikasi `BrowserWindow` punya `contextIsolation: true` dan `nodeIntegration: false` (Requirement 8.4).
   - Pastikan tidak ada `console.log` API key di seluruh codebase (grep manual).
@@ -144,7 +144,7 @@ Pendekatan: **bottom-up incremental**. Layer paling stabil (types, schema valida
   - Fix issue yang ditemukan.
   - _Requirements: 5.6, 7.4, 8.1, 8.2, 8.3, 8.4, 8.5_
 
-- [~] 20. Performance check & polish akhir
+- [ ] 20. Performance check & polish akhir
   - Ukur waktu launch app, waktu generate, waktu render 5 detik 1080p di mesin development. Bandingkan dengan target (5s, 15s, 60s).
   - Jika ada bottleneck render: throttle progress event lebih agresif, konfigurasi Remotion concurrency.
   - Cek memory usage setelah 5 sesi generate berturut-turut, pastikan < 50 MB increment per sesi.
