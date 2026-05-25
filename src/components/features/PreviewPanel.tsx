@@ -14,11 +14,8 @@ import type { SceneSpec } from '@/types/SceneSpec';
 interface PreviewPanelProps {
   onPlayerReady?: (playerRef: PlayerRef) => void;
   /**
-   * Komponen Remotion yang akan di-render. Di-pass dari parent (Editor)
-   * yang melakukan dynamic import dari remotion/ directory.
-   * Tipe `React.ComponentType<{ sceneSpec: SceneSpec }>` tapi di-cast ke
-   * `React.ComponentType<Record<string, unknown>>` agar kompatibel dengan
-   * @remotion/player yang butuh `ComponentType<Record<string, unknown>>`.
+   * Komponen Remotion yang akan di-render. Di-pass dari Editor.tsx
+   * yang import RootComposition dari remotion/ directory.
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   compositionComponent?: React.ComponentType<any>;

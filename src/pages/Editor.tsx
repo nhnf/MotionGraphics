@@ -4,7 +4,7 @@
 // Mengikuti coding-rules Section 4 (function declaration, max 150 baris).
 // Logic di-delegate ke komponen features dan hooks masing-masing.
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import type { PlayerRef } from '@remotion/player';
 
 import { Button } from '@/components/ui/Button';
@@ -14,8 +14,8 @@ import { SceneList } from '@/components/features/SceneList';
 import { ExportBar } from '@/components/features/ExportBar';
 import { useHasApiKey, useSettingsActions } from '@/stores/settingsStore';
 import { getApiKeyStatus } from '@/lib/ipc';
-import type { Scene, SceneSpec } from '@/types/SceneSpec';
-
+import type { Scene } from '@/types/SceneSpec';
+import { RootComposition as RemotionRootComposition } from '@/remotion/RootComposition';
 interface EditorProps {
   onNavigateToSettings: () => void;
 }
@@ -24,25 +24,6 @@ export function Editor({ onNavigateToSettings }: EditorProps) {
   const hasApiKey = useHasApiKey();
   const settingsActions = useSettingsActions();
   const playerRef = useRef<PlayerRef | null>(null);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [RootComposition, setRootComposition] = useState<React.ComponentType<{ sceneSpec: SceneSpec }> | null>(null);
-
-  // Lazy-load RootComposition dari remotion directory (tidak di-typecheck oleh tsc)
-  useEffect(() => {
-    // Dynamic import dengan @vite-ignore agar Vite tidak pre-bundle ini,
-    // dan TypeScript tidak mencoba resolve path ke remotion/ directory.
-    // Remotion files dikompilasi oleh @remotion/bundler, bukan tsc.
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const loadComponent = new Function(
-      'return import(/* @vite-ignore */ "../../../remotion/RootComposition")'
-    );
-    loadComponent()
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .then((mod: any) => setRootComposition(() => mod.RootComposition as React.ComponentType<{ sceneSpec: SceneSpec }>))
-      .catch(() => {
-        // Gagal load — preview tidak tersedia
-      });
-  }, []);
 
   // Sync API key status dari main process saat mount
   useEffect(() => {
@@ -120,7 +101,7 @@ export function Editor({ onNavigateToSettings }: EditorProps) {
           <div className="flex-1 overflow-hidden">
             <PreviewPanel
               onPlayerReady={handlePlayerReady}
-              compositionComponent={RootComposition ?? undefined}
+              compositionComponent={RemotionRootComposition}
             />
           </div>
 

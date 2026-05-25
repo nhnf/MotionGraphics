@@ -22,7 +22,8 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
-      "remotion": ["node_modules/remotion/dist/cjs/index.d.ts"]
+      "remotion": ["node_modules/remotion/dist/cjs/index.d.ts"],
+      "remotion/*": ["node_modules/remotion/dist/cjs/*"]
     },
     "types": ["vite/client"]
   },
