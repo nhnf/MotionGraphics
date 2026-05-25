@@ -25,5 +25,6 @@
     },
     "types": ["vite/client"]
   },
-  "include": ["src/**/*", "remotion/**/*"]
+  "include": ["src/**/*"],
+  "exclude": ["remotion/**/*"]
 }
