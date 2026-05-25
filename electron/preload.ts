@@ -10,6 +10,14 @@ import {
   type SetApiKeyResponse,
   type GetApiKeyResponse,
   type DeleteApiKeyResponse,
+  type RenderStartPayload,
+  type RenderStartResponse,
+  type RenderCancelResponse,
+  type RenderProgressEvent,
+  type SaveDialogPayload,
+  type SaveDialogResponse,
+  type RevealPayload,
+  type RevealResponse,
 } from '../src/types/ipc';
 
 contextBridge.exposeInMainWorld('electronAPI', {
@@ -47,7 +55,45 @@ contextBridge.exposeInMainWorld('electronAPI', {
     },
   },
 
-  // Placeholder untuk future API (task 16):
-  // render: { start, cancel, onProgress },
-  // file: { saveDialog, reveal },
+  render: {
+    /**
+     * Mulai render video dari SceneSpec.
+     */
+    start: (payload: RenderStartPayload): Promise<RenderStartResponse> => {
+      return ipcRenderer.invoke(IPC_CHANNELS.render.start, payload);
+    },
+
+    /**
+     * Cancel render yang sedang berjalan.
+     */
+    cancel: (): Promise<RenderCancelResponse> => {
+      return ipcRenderer.invoke(IPC_CHANNELS.render.cancel);
+    },
+
+    /**
+     * Listen untuk progress events dari main process.
+     * Returns cleanup function untuk remove listener.
+     */
+    onProgress: (listener: (event: RenderProgressEvent) => void): (() => void) => {
+      const handler = (_: unknown, event: RenderProgressEvent) => listener(event);
+      ipcRenderer.on(IPC_CHANNELS.render.progress, handler);
+      return () => ipcRenderer.removeListener(IPC_CHANNELS.render.progress, handler);
+    },
+  },
+
+  file: {
+    /**
+     * Tampilkan save dialog untuk pilih lokasi output video.
+     */
+    saveDialog: (payload: SaveDialogPayload): Promise<SaveDialogResponse> => {
+      return ipcRenderer.invoke(IPC_CHANNELS.file.saveDialog, payload);
+    },
+
+    /**
+     * Buka file explorer dan highlight file.
+     */
+    reveal: (payload: RevealPayload): Promise<RevealResponse> => {
+      return ipcRenderer.invoke(IPC_CHANNELS.file.reveal, payload);
+    },
+  },
 });

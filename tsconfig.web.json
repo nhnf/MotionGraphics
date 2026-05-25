@@ -21,7 +21,8 @@
     "noEmit": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "remotion": ["node_modules/remotion/dist/cjs/index.d.ts"]
     },
     "types": ["vite/client"]
   },

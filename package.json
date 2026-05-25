@@ -12,6 +12,7 @@
     "build": "electron-vite build",
     "preview": "electron-vite preview",
     "typecheck": "tsc --noEmit -p tsconfig.web.json && tsc --noEmit -p tsconfig.node.json",
+    "typecheck:remotion": "tsc --noEmit -p tsconfig.remotion.json",
     "lint": "eslint . --ext .ts,.tsx --max-warnings 0",
     "format": "prettier --write \"**/*.{ts,tsx,css,md,json}\"",
     "remotion:studio": "remotion studio remotion/index.ts"
@@ -19,6 +20,7 @@
   "dependencies": {
     "@google/genai": "^1.0.0",
     "@google/generative-ai": "^0.24.1",
+    "@remotion/bundler": "4.0.466",
     "@remotion/player": "^4.0.0",
     "@remotion/renderer": "^4.0.0",
     "electron-store": "^10.0.0",

@@ -44,7 +44,7 @@ export function QuoteCard({ scene }: QuoteCardProps) {
           fontFamily: 'Georgia, serif',
         }}
       >
-        "
+        &ldquo;
       </div>
 
       {/* Quote text */}

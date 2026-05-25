@@ -2,6 +2,8 @@ import { app, BrowserWindow, shell } from 'electron';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { registerSettingsHandlers } from './ipc/settings';
+import { registerRenderHandlers } from './ipc/render';
+import { registerFileHandlers } from './ipc/file';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -44,10 +46,12 @@ function createMainWindow(): BrowserWindow {
 }
 
 app.whenReady().then(() => {
-  // Register IPC handlers sebelum window dibuat agar siap saat renderer load
-  registerSettingsHandlers();
+  const mainWindow = createMainWindow();
 
-  createMainWindow();
+  // Register IPC handlers sebelum window load agar siap saat renderer load
+  registerSettingsHandlers();
+  registerRenderHandlers(mainWindow);
+  registerFileHandlers();
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
