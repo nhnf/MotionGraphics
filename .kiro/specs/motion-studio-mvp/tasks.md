@@ -36,7 +36,7 @@ Pendekatan: **bottom-up incremental**. Layer paling stabil (types, schema valida
   - Schema validation: hanya satu key `apiKey` (string).
   - _Requirements: 5.2, 5.6, 8.2_
 
-- [ ] 5. IPC handlers settings + bridge di preload
+- [x] 5. IPC handlers settings + bridge di preload
   - Buat `electron/ipc/settings.ts` dengan handler `settings:get-api-key-status`, `settings:set-api-key`, `settings:get-api-key`, `settings:delete-api-key`. Semua mengembalikan `{ success, ... }`.
   - Update `electron/preload.ts` untuk expose `electronAPI.settings.{getStatus, setKey, getKey, deleteKey}`.
   - Update `src/global.d.ts` dengan interface ElectronAPI yang sesuai.
