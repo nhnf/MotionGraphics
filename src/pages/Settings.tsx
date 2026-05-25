@@ -6,11 +6,15 @@ import { getApiKeyStatus, setApiKey, getApiKey, deleteApiKey } from '@/lib/ipc';
 import { useSettingsActions } from '@/stores/settingsStore';
 import { GOOGLE_AI_STUDIO_URL, GEMINI_MODEL } from '@/constants';
 
+interface SettingsProps {
+  onNavigateToEditor: () => void;
+}
+
 /**
  * Halaman Settings untuk mengelola Gemini API key.
  * Fitur: input API key, test connection, delete key, link ke Google AI Studio.
  */
-export function Settings() {
+export function Settings({ onNavigateToEditor }: SettingsProps) {
   const [apiKeyInput, setApiKeyInput] = useState('');
   const [hasKey, setHasKey] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -115,7 +119,12 @@ export function Settings() {
   return (
     <div className="flex h-full flex-col bg-bg text-fg">
       <header className="flex items-center justify-between border-b border-border px-6 py-3">
-        <h1 className="text-sm font-semibold tracking-wide">Settings</h1>
+        <div className="flex items-center gap-3">
+          <Button variant="secondary" onClick={onNavigateToEditor}>
+            ← Kembali
+          </Button>
+          <h1 className="text-sm font-semibold tracking-wide">Settings</h1>
+        </div>
       </header>
 
       <main className="flex flex-1 items-center justify-center p-6">

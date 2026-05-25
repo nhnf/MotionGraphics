@@ -44,7 +44,7 @@ Pendekatan: **bottom-up incremental**. Layer paling stabil (types, schema valida
   - Daftarkan handler di `electron/main.ts` saat app ready.
   - _Requirements: 5.2, 5.5, 8.1_
 
-- [ ] 6. Halaman Settings (UI API key)
+- [x] 6. Halaman Settings (UI API key)
   - Buat `src/components/ui/Button.tsx`, `Input.tsx`, dan komponen atom lain yang dibutuhkan.
   - Implementasi `src/pages/Settings.tsx` dengan form input API key (type=password), tombol Save, tombol Test Connection, tombol Hapus.
   - Save → panggil `electronAPI.settings.setKey()`.
@@ -53,7 +53,7 @@ Pendekatan: **bottom-up incremental**. Layer paling stabil (types, schema valida
   - Link ke Google AI Studio (`https://aistudio.google.com/apikey`) yang membuka external browser.
   - _Requirements: 5.1, 5.3, 5.4, 5.5_
 
-- [ ] 7. Routing minimal Editor ↔ Settings
+- [x] 7. Routing minimal Editor ↔ Settings
   - Update `src/App.tsx` dengan state route sederhana (`'editor' | 'settings'`) tanpa router library.
   - Header punya tombol "Settings" yang switch route.
   - Halaman Settings punya tombol "Kembali ke Editor".
