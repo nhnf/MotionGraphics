@@ -76,20 +76,21 @@ export function Settings({ onNavigateToEditor }: SettingsProps) {
       // Test with minimal Gemini API call
       const genAI = new GoogleGenerativeAI(apiKey);
       const model = genAI.getGenerativeModel({ model: GEMINI_MODEL });
-      await model.generateContent('Hello');
+      await model.generateContent('Hi');
 
       setSuccessMessage('Koneksi berhasil! API key valid.');
     } catch (err) {
-      if (err instanceof Error) {
-        if (err.message.includes('API key')) {
-          setError('API key tidak valid. Periksa kembali di Google AI Studio.');
-        } else if (err.message.includes('quota')) {
-          setError('Kuota API habis. Coba lagi nanti.');
-        } else {
-          setError('Gagal terhubung ke Gemini API. Periksa koneksi internet.');
-        }
+      const msg = err instanceof Error ? err.message.toLowerCase() : '';
+
+      if (msg.includes('api key not valid') || msg.includes('api_key_invalid') || msg.includes('invalid api key')) {
+        setError('API key tidak valid. Pastikan key sudah benar di Google AI Studio.');
+      } else if (msg.includes('quota') || msg.includes('rate limit') || msg.includes('resource_exhausted') || msg.includes('429')) {
+        setError('Rate limit tercapai. Tunggu 1-2 menit lalu coba lagi. (Ini normal untuk free tier)');
+      } else if (msg.includes('network') || msg.includes('fetch') || msg.includes('failed to fetch')) {
+        setError('Tidak ada koneksi internet. Periksa koneksi lalu coba lagi.');
       } else {
-        setError('Terjadi kesalahan saat test connection');
+        // Tampilkan pesan asli dari API agar lebih mudah debug
+        setError(`Test gagal: ${err instanceof Error ? err.message : 'Unknown error'}`);
       }
     } finally {
       setIsTesting(false);
