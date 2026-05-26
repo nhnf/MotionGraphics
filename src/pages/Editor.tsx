@@ -25,18 +25,21 @@ export function Editor({ onNavigateToSettings }: EditorProps) {
   const settingsActions = useSettingsActions();
   const playerRef = useRef<PlayerRef | null>(null);
 
-  // Sync API key status dari main process saat mount
+  // Sync API key status dari main process saat mount saja (bukan setiap render).
+  // settingsActions sengaja tidak masuk dependency array — Zustand actions
+  // adalah referensi stabil dan tidak perlu di-track sebagai dependency.
   useEffect(() => {
     const checkStatus = async () => {
       try {
         const status = await getApiKeyStatus();
         settingsActions.setHasApiKey(status.hasKey);
       } catch {
-        // Jika IPC gagal (mis. di dev tanpa Electron), biarkan state default
+        // IPC gagal (mis. di dev tanpa Electron) — biarkan state default
       }
     };
     checkStatus();
-  }, [settingsActions]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // intentionally empty — run once on mount only
 
   const handlePlayerReady = (ref: PlayerRef) => {
     playerRef.current = ref;

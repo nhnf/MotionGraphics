@@ -25,7 +25,8 @@ export function Settings({ onNavigateToEditor }: SettingsProps) {
 
   const settingsActions = useSettingsActions();
 
-  // Check API key status on mount
+  // Check API key status on mount saja.
+  // settingsActions sengaja tidak masuk dependency array — Zustand actions stabil.
   useEffect(() => {
     const checkStatus = async () => {
       try {
@@ -37,7 +38,8 @@ export function Settings({ onNavigateToEditor }: SettingsProps) {
       }
     };
     checkStatus();
-  }, [settingsActions]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // intentionally empty — run once on mount only
 
   const handleSave = async () => {
     setError(null);

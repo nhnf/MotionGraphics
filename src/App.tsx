@@ -66,9 +66,15 @@ export function App() {
 
   return (
     <ErrorBoundary>
-      {currentRoute === 'editor' && (
+      {/*
+       * Gunakan visibility + display bukan conditional render agar Editor
+       * tidak unmount saat navigasi ke Settings. Ini mencegah:
+       * 1. State Editor (prompt, preview) hilang saat kembali
+       * 2. useEffect di Editor re-run dan overwrite hasApiKey sementara
+       */}
+      <div style={{ display: currentRoute === 'editor' ? 'contents' : 'none' }}>
         <Editor onNavigateToSettings={navigateToSettings} />
-      )}
+      </div>
       {currentRoute === 'settings' && (
         <Settings onNavigateToEditor={navigateToEditor} />
       )}
