@@ -180,11 +180,12 @@ export async function generateSceneSpec(
           );
         }
 
-        // 429 Too Many Requests - Quota exceeded
-        if (message.includes('quota') || message.includes('429') || message.includes('rate limit')) {
+        // 429 Too Many Requests - Rate limit / Quota exceeded
+        if (message.includes('quota') || message.includes('429') || message.includes('rate limit') || message.includes('resource_exhausted') || message.includes('too many requests')) {
+          // Jangan retry untuk rate limit — langsung throw
           throw new GeminiError(
-            'Kuota Gemini API habis. Coba lagi nanti atau upgrade plan Anda.',
-            err,
+            'Rate limit Gemini API tercapai (429). Tunggu 1 menit lalu coba lagi. ' +
+            'Free tier: maks 15 request/menit.',
           );
         }
 
