@@ -122,8 +122,14 @@ export async function generateSceneSpec(
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), GEMINI_REQUEST_TIMEOUT_MS);
 
-      const result = await model.generateContent(prompt);
-      clearTimeout(timeoutId);
+      let result;
+      try {
+        result = await model.generateContent({
+          contents: [{ role: 'user', parts: [{ text: prompt }] }],
+        });
+      } finally {
+        clearTimeout(timeoutId);
+      }
 
       const response = result.response;
       const text = response.text();

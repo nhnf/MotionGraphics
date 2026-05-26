@@ -95,6 +95,9 @@ export function useGemini(): UseGeminiResult {
         sceneActions.setSceneSpec(sceneSpec);
         sceneActions.addPromptToHistory(trimmedPrompt);
       } catch (err) {
+        // Log error asli ke console untuk debugging
+        console.error('[useGemini] Generation failed:', err);
+
         // Map error ke pesan user-friendly
         let errorMessage: string;
 
