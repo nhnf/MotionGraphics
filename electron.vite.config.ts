@@ -12,7 +12,6 @@ export default defineConfig({
         input: resolve(__dirname, 'electron/main.ts'),
         output: {
           entryFileNames: 'index.js',
-          format: 'es',
         },
       },
     },
@@ -30,7 +29,6 @@ export default defineConfig({
         input: resolve(__dirname, 'electron/preload.ts'),
         output: {
           entryFileNames: 'index.js',
-          format: 'cjs',
         },
       },
     },

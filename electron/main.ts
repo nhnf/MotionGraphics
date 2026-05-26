@@ -1,11 +1,8 @@
 import { app, BrowserWindow, shell } from 'electron';
-import { fileURLToPath } from 'node:url';
-import { dirname, join } from 'node:path';
+import { join } from 'node:path';
 import { registerSettingsHandlers } from './ipc/settings';
 import { registerFileHandlers } from './ipc/file';
 import { registerRenderHandlers } from './ipc/render';
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const DEV_SERVER_URL = process.env['ELECTRON_RENDERER_URL'];
 
@@ -46,7 +43,7 @@ function createMainWindow(): BrowserWindow {
 }
 
 app.whenReady().then(() => {
-  // Daftarkan IPC handlers SEBELUM window dibuat agar siap saat renderer load
+  // Daftarkan IPC handlers SEBELUM window dibuat
   registerSettingsHandlers();
   registerFileHandlers();
 

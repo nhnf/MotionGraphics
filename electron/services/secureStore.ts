@@ -1,18 +1,8 @@
-// Wrapper untuk persistensi Gemini API key menggunakan electron-store v8.
+// Wrapper untuk persistensi Gemini API key menggunakan electron-store v8 (CJS).
 // Hanya dipakai di main process — renderer mengakses lewat IPC `settings:*`.
-//
-// electron-store v8 adalah CJS. Main process di-build sebagai ESM oleh
-// electron-vite, sehingga kita pakai createRequire untuk load CJS module.
 
-import { createRequire } from 'node:module';
-
-const require = createRequire(import.meta.url);
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const ElectronStore = require('electron-store');
-
-interface StoreSchema {
-  apiKey?: string;
-}
 
 const STORE_SCHEMA = {
   apiKey: {
@@ -23,9 +13,11 @@ const STORE_SCHEMA = {
 
 const STORE_ENCRYPTION_KEY = 'motion-studio-v1-config-obfuscation-key';
 
-let storeInstance: InstanceType<typeof ElectronStore> | null = null;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let storeInstance: any = null;
 
-function getStore(): InstanceType<typeof ElectronStore> {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function getStore(): any {
   if (storeInstance === null) {
     storeInstance = new ElectronStore({
       schema: STORE_SCHEMA,

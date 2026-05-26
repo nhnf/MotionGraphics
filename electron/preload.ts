@@ -20,7 +20,11 @@ import {
   type RevealResponse,
 } from '../src/types/ipc';
 
-contextBridge.exposeInMainWorld('electronAPI', {
+// Debug: konfirmasi preload berjalan
+console.log('[preload] Script loaded, setting up electronAPI...');
+
+try {
+  contextBridge.exposeInMainWorld('electronAPI', {
   settings: {
     /**
      * Cek apakah API key sudah tersimpan tanpa membaca nilainya.
@@ -97,3 +101,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
     },
   },
 });
+  console.log('[preload] electronAPI exposed successfully');
+} catch (err) {
+  console.error('[preload] Failed to expose electronAPI:', err);
+}
